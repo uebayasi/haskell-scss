@@ -6,9 +6,14 @@ import           Text.SCSS.Parser
 
 main :: IO ()
 main = do
-    putStrLn $ test "a"
+    args <- getArgs
+    mapM_ (putStrLn . test) args
 
 test :: String -> String
 test s = case parse parseScss "SCSS" s of
     Left err -> "Error: " ++ show err
-    Right v  -> "OK"
+    Right v  -> "OK: " ++ showResult v
+    where
+        showResult v = case v of
+            []         -> ""
+            first:rest -> show v ++ "\n" ++ showResult rest
