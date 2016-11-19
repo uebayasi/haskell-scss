@@ -33,8 +33,8 @@ uncomment = many scan
         others :: Parser String
         others = count 2 anyChar
 
-comment :: Parser a -> Parser b -> Parser String
-comment open close = try open *> manyTill anyChar (try close) *> pure ""
+        comment :: Parser a -> Parser b -> Parser String
+        comment l r = try l *> manyTill anyChar (try r) *> pure ""
 
 {- # parseScss
 
