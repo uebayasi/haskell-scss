@@ -25,13 +25,16 @@ uncomment = many scan
         nonSlash = many1 (try (noneOf "/"))
 
         lineComment :: Parser String
-        lineComment = try (string "//") *> manyTill anyChar (try newline) *> pure ""
+        lineComment = comment (string "//") newline
 
         blockComment :: Parser String
-        blockComment = try (string "/*") *> manyTill anyChar (try (string "*/")) *> pure ""
+        blockComment = comment (string "/*") (string "*/")
 
         others :: Parser String
         others = count 2 anyChar
+
+comment :: Parser a -> Parser b -> Parser String
+comment open close = try open *> manyTill anyChar (try close) *> pure ""
 
 {- # parseScss
 
