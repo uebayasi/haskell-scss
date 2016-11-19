@@ -14,10 +14,10 @@ type ScssStatement = String
 
 -}
 preParseScss :: Parser [String]
-preParseScss = uncomment
+preParseScss = comment
 
-uncomment :: Parser [String]
-uncomment = many scan
+comment :: Parser [String]
+comment = many scan
     where
         scan = nonSlash <|> lineComment <|> blockComment <|> others
 
@@ -25,13 +25,13 @@ uncomment = many scan
         nonSlash = many1 (try (noneOf "/"))
 
         lineComment :: Parser String
-        lineComment = comment (string "//") newline
+        lineComment = skipBetween (string "//") newline
 
         blockComment :: Parser String
-        blockComment = comment (string "/*") (string "*/")
+        blockComment = skipBetween (string "/*") (string "*/")
 
-        comment :: Parser a -> Parser b -> Parser String
-        comment l r = try l *> manyTill anyChar (try r) *> pure ""
+        skipBetween :: Parser a -> Parser b -> Parser String
+        skipBetween l r = try l *> manyTill anyChar (try r) *> pure ""
 
         others :: Parser String
         others = count 2 anyChar
