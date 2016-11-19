@@ -10,7 +10,7 @@ main = do
     mapM_ (putStrLn . test) args
 
 test :: String -> String
-test s = case parse parseScss "SCSS" s of
+test s = case parse preParseScss "SCSS" s of
     Left err -> "Error: " ++ show err
     Right v  -> "OK: " ++ showResult v
     where
